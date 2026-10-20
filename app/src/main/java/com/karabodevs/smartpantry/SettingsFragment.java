@@ -1,12 +1,30 @@
 package com.karabodevs.smartpantry;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        View v = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        SwitchMaterial switchAlerts = v.findViewById(R.id.switchAlerts);
+
+        SharedPreferences prefs = getContext().getSharedPreferences("settings", Context.MODE_PRIVATE);
+        boolean alertsOn = prefs.getBoolean("alerts", true);
+        switchAlerts.setChecked(alertsOn);
+
+        switchAlerts.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean("alerts", isChecked).apply();
+        });
+
+        return v;
     }
 }
